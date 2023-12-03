@@ -1,0 +1,54 @@
+.errorCounter {
+  color: red;
+}
+
+.counterContainer {
+  width: 500px;
+  height: 450px;
+  border: 5px solid rgb(75, 173, 199);
+  margin: 150px auto 0;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.counterContent {
+  width: 400px;
+  border: 5px solid rgb(75, 173, 199);
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  height: 230px;
+  margin: 30px auto 0;
+  color: #fff;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.counterValue {
+  font-size: 30px;
+}
+
+.counterBottom {
+  height: 100px;
+  margin: 50px auto 0;
+  justify-content: space-evenly;
+  width: 400px;
+  border-radius: 15px;
+  border: 5px solid rgb(75, 173, 199);
+  display: flex;
+  align-items: center;
+}
+
+.counterBottom button {
+  width: 150px;
+  height: 40px;
+  padding: 5px;
+  color: rgb(75, 173, 199);
+  font-size: 20px;
+  border: 2px solid rgb(75, 173, 199);
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+}
