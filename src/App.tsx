@@ -1,83 +1,37 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+// @ts-nocheck
+import React from "react";
 import "./App.css";
+import { useSelector, useDispatch } from "react-redux";
+import { increment, set, reset } from "./redux/Slices/counterSlice";
+
 import SettingsBlok from "./components/SettingsBlok/SettingsBlok";
 import CounterBlok from "./components/CounterBlok/CounterBlok";
 
 function App() {
-  const [counterValue, setCounterValue] = useState(0);
-  const [maxValue, setMaxValue] = useState(4);
-  const [startValue, setStartValue] = useState(0);
+  const counterValue = useSelector((state) => state.counter.counterValue);
+  const maxValue = useSelector((state) => state.counter.maxValue);
+  const startValue = useSelector((state) => state.counter.startValue);
 
-  const [settingBoolean, setSettingBoolean] = useState(false);
-  const [incBoolean, setIncBoolean] = useState(false);
-  const [resetBoolean, setResetBoolean] = useState(true);
+  const settingBoolean = useSelector((state) => state.counter.settingBoolean);
+  const incBoolean = useSelector((state) => state.counter.incBoolean);
+  const resetBoolean = useSelector((state) => state.counter.resetBoolean);
 
-  const [counterValueShow, setCounterValueShow] = useState(true);
+  const counterValueShow = useSelector(
+    (state) => state.counter.counterValueShow
+  );
 
-  React.useEffect(() => {
-    const maxValueStr = localStorage.getItem("maxValue");
-    if (maxValueStr) {
-      const newValue1 = JSON.parse(maxValueStr);
-      setMaxValue(newValue1);
-    }
-    const startValueStr = localStorage.getItem("startValue");
-    if (startValueStr) {
-      const newValue2 = JSON.parse(startValueStr);
-      setStartValue(newValue2);
-    }
-  }, []);
-
-  React.useEffect(() => {}, [maxValue, startValue]);
+  const dispatch = useDispatch();
 
   const onclickSet = () => {
-    setCounterValue(startValue);
-    setResetBoolean(true);
-    setIncBoolean(false);
-    setCounterValueShow(true);
-
-    localStorage.setItem("maxValue", JSON.stringify(maxValue));
-    localStorage.setItem("startValue", JSON.stringify(startValue));
+    dispatch(set());
   };
 
   const onclickInc = () => {
-    setCounterValue(counterValue + 1);
-    setResetBoolean(false);
-    if (counterValue === maxValue - 1) {
-      setIncBoolean(true);
-    }
+    dispatch(increment());
   };
 
   const onclickReset = () => {
-    setResetBoolean(true);
-    setIncBoolean(false);
-    setCounterValue(startValue);
-  };
-
-  const onChangeMaxValueHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    setMaxValue(Number(event.target.value));
-    if (Number(event.target.value) > startValue) {
-      setSettingBoolean(false);
-      setIncBoolean(false);
-    } else {
-      setSettingBoolean(true);
-      setIncBoolean(true);
-    }
-  };
-
-  const onChangeStartValueHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    setStartValue(Number(event.target.value));
-    setIncBoolean(true);
-    setCounterValueShow(false);
-    if (
-      !(Number(event.target.value) < maxValue) ||
-      Number(event.target.value) < 0
-    ) {
-      setSettingBoolean(true);
-      setIncBoolean(true);
-    } else {
-      setSettingBoolean(false);
-      setIncBoolean(false);
-    }
+    dispatch(reset());
   };
 
   return (
@@ -85,9 +39,7 @@ function App() {
       <SettingsBlok
         settingBoolean={settingBoolean}
         maxValue={maxValue}
-        onChangeMaxValueHandler={onChangeMaxValueHandler}
         startValue={startValue}
-        onChangeStartValueHandler={onChangeStartValueHandler}
         onclickSet={onclickSet}
       />
       <CounterBlok

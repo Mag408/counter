@@ -1,16 +1,32 @@
 import React, { ChangeEvent } from "react";
+import { useDispatch } from "react-redux";
+import {
+  increment,
+  set,
+  reset,
+  onChangeMaxValue,
+  onChangeStartValue,
+} from "../../redux/Slices/counterSlice";
 import "./SettingsBlok.css";
 
 type SettingsPropsType = {
   maxValue: number;
   startValue: number;
-  onChangeMaxValueHandler: (event: ChangeEvent<HTMLInputElement>) => void;
-  onChangeStartValueHandler: (event: ChangeEvent<HTMLInputElement>) => void;
   settingBoolean: boolean;
   onclickSet: () => void;
 };
 
 const SettingsBlok: React.FC<SettingsPropsType> = (props) => {
+  const dispatch = useDispatch();
+
+  const onChangeMaxValueHandler = (value: number) => {
+    dispatch(onChangeMaxValue(value));
+  };
+
+  const onChangeStartValueHandler = (value: number) => {
+    dispatch(onChangeStartValue(value));
+  };
+
   return (
     <div className="settingContainer">
       <div className="settingContent">
@@ -18,7 +34,9 @@ const SettingsBlok: React.FC<SettingsPropsType> = (props) => {
           <span>Max value:</span>{" "}
           <input
             className={props.settingBoolean ? "errorSetting" : ""}
-            onChange={props.onChangeMaxValueHandler}
+            onChange={(e) => {
+              onChangeMaxValueHandler(Number(e.target.value));
+            }}
             value={props.maxValue}
             type="number"
           />
@@ -27,7 +45,7 @@ const SettingsBlok: React.FC<SettingsPropsType> = (props) => {
           <span>Start value:</span>{" "}
           <input
             className={props.settingBoolean ? "errorSetting" : ""}
-            onChange={props.onChangeStartValueHandler}
+            onChange={(e) => onChangeStartValueHandler(Number(e.target.value))}
             value={props.startValue}
             type="number"
           />

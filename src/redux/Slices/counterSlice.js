@@ -1,13 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  value: 0,
-  maxValue: 3,
-  startValue: 0,
+  counterValue: JSON.parse(localStorage.getItem("startValue")) || 0,
+  maxValue: JSON.parse(localStorage.getItem("maxValue")) || 3,
+  startValue: JSON.parse(localStorage.getItem("startValue")) || 0,
   settingBoolean: false,
   incBoolean: false,
   resetBoolean: false,
-  valueShow: false,
+  counterValueShow: false,
 };
 
 export const counterSlice = createSlice({
@@ -15,26 +15,56 @@ export const counterSlice = createSlice({
   initialState,
   reducers: {
     increment: (state) => {
-      state.value += 1;
+      state.counterValue += 1;
+      state.resetBoolean = false;
+      if (state.counterValue === state.maxValue) {
+        state.incBoolean = true;
+      }
     },
     set: (state) => {
-      state.value -= 1;
+      state.counterValue = state.startValue;
+      state.resetBoolean = true;
+      state.incBoolean = false;
+      state.counterValueShow = true;
+
+      localStorage.setItem("maxValue", JSON.stringify(state.maxValue));
+      localStorage.setItem("startValue", JSON.stringify(state.startValue));
     },
-    reset: (state, action) => {
-      state.value += action.payload;
+    reset: (state) => {
+      state.resetBoolean = true;
+      state.incBoolean = false;
+      state.counterValue = state.startValue;
     },
-    onChangeMaxValueHandler: () => {},
-    onChangeStartValueHandler: () => {},
+    onChangeMaxValue: (state, action) => {
+      state.maxValue = Number(action.payload);
+      if (Number(action.payload) > state.startValue) {
+        state.settingBoolean = false;
+        state.incBoolean = false;
+      } else {
+        state.settingBoolean = true;
+        state.incBoolean = true;
+      }
+    },
+    onChangeStartValue: (state, action) => {
+      state.startValue = Number(action.payload);
+      state.incBoolean = true;
+      state.counterValueShow = false;
+      if (
+        !(Number(action.payload) < state.maxValue) ||
+        Number(action.payload) < 0
+      ) {
+        state.settingBoolean = true;
+        state.incBoolean = true;
+      } else {
+        state.settingBoolean = false;
+        state.incBoolean = false;
+      }
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const {
-  increment,
-  set,
-  reset,
-  onChangeMaxValueHandler,
-  onChangeStartValueHandler,
-} = counterSlice.actions;
+export const { increment, set, reset, onChangeMaxValue, onChangeStartValue } =
+  counterSlice.actions;
 
 export default counterSlice.reducer;
